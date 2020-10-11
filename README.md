@@ -22,13 +22,9 @@ From the documentation, we can see the Endpoint of the API is `https://dog.ceo/a
 ```swift
 var response: Response?
 
-let onSuccessBlock: (Response) -> Void = { apiResponse in
+NetworkUtil.request(from: "https://dog.ceo/api/breeds/image/random", responseType: Response.self, httpMethod: .get, parameters: nil, onSuccess: { apiResponse in
     response = apiResponse
+}) { error in
+    print(error.localizedDescription)
 }
-
-let onFailureBlock: (Error) -> Void = { error in
-    print(error)
-}
-
-NetworkUtil.request(from: "https://dog.ceo/api/breeds/image/random", httpMethod: .get, parameters: nil, onSuccess: onSuccessBlock, onFailure: onFailureBlock)
 ```
