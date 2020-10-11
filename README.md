@@ -28,3 +28,22 @@ NetworkUtil.request(from: "https://dog.ceo/api/breeds/image/random", responseTyp
     print(error.localizedDescription)
 }
 ```
+
+## Cancel the Request
+
+There's a case when we need to cancel the request, for example when we requesting the API and we close the ViewController we should close the Request Process because we don't need the Response again and we should cancel the Request that run in the `Background Thread`
+
+We can retain the `URLSessionDataTask` that return when we call `Network.request(from:responseType:httpMethod:parameters:onSuccess:onFailure:)`.
+
+```swift
+var response: Response?
+
+let sessionDataTask: URLSessionDataTask? = NetworkUtil.request(from: "https://dog.ceo/api/breeds/image/random", responseType: Response.self, httpMethod: .get, parameters: nil, onSuccess: { apiResponse in
+    response = apiResponse
+}) { error in
+    print(error.localizedDescription)
+}
+
+
+sessionDataTask?.cancel()
+```
