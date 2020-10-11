@@ -34,7 +34,8 @@ final class NetworkUtil {
     /// - Returns: Session Data Task of the request (URLSessionDataTask)
     @discardableResult
     static func request<T: Decodable>(from urlString: String,
-                                      httpMethod: HTTPMethod = .get,
+                                      responseType: T.Type,
+                                      httpMethod: HTTPMethod?,
                                       parameters: [String: Any]?,
                                       onSuccess: @escaping (T) -> Void,
                                       onFailure: @escaping (Error) -> Void) -> URLSessionDataTask? {
@@ -43,7 +44,7 @@ final class NetworkUtil {
         let session: URLSession = URLSession(configuration: .default)
         var urlRequest: URLRequest = URLRequest(url: url)
         
-        urlRequest.httpMethod = httpMethod.toString
+        urlRequest.httpMethod = httpMethod?.toString
         
         if let parameters: [String: Any] = parameters, let parametersData: Data = try? JSONSerialization.data(withJSONObject: parameters) {
             urlRequest.httpBody = parametersData
