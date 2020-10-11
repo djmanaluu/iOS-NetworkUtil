@@ -22,8 +22,23 @@ final class NetworkUtil {
         }
     }
     
-    static func request<T: Decodable>(from urlString: String, httpMethod: HTTPMethod = .get, parameters: [String: Any]?, onSuccess: @escaping (T) -> Void, onFailure: @escaping (Error) -> Void) {
-        guard let url: URL = URL(string: urlString) else { return }
+    /// Create Request with specific URL of the Endpoint, the httpMethod and parameters.
+    ///
+    /// - Parameters:
+    ///   - urlString: API Endpoint
+    ///   - httpMethod: HTTP Method (`.get`, `.post`, `.put`, `.patch`, `.delete`)
+    ///   - parameters: Dictionary of the parameters (request dictionary)
+    ///   - onSuccess: Block for success action
+    ///   - onFailure: Block for failed action
+    ///
+    /// - Returns: Session Data Task of the request (URLSessionDataTask)
+    @discardableResult
+    static func request<T: Decodable>(from urlString: String,
+                                      httpMethod: HTTPMethod = .get,
+                                      parameters: [String: Any]?,
+                                      onSuccess: @escaping (T) -> Void,
+                                      onFailure: @escaping (Error) -> Void) -> URLSessionDataTask? {
+        guard let url: URL = URL(string: urlString) else { return nil }
         
         let session: URLSession = URLSession(configuration: .default)
         var urlRequest: URLRequest = URLRequest(url: url)
@@ -34,7 +49,7 @@ final class NetworkUtil {
             urlRequest.httpBody = parametersData
         }
         
-        session.dataTask(with: urlRequest) { data, response, error in
+        let dataTask: URLSessionDataTask = session.dataTask(with: urlRequest) { data, response, error in
             DispatchQueue.main.async {
                 if let error: Error = error {
                     onFailure(error)
@@ -50,6 +65,10 @@ final class NetworkUtil {
                     }
                 }
             }
-        }.resume()
+        }
+        
+        dataTask.resume()
+        
+        return dataTask
     }
 }
