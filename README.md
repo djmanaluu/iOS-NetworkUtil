@@ -40,10 +40,7 @@ var response: Response?
 
 let sessionDataTask: URLSessionDataTask? = NetworkUtil.request(from: "https://dog.ceo/api/breeds/image/random", responseType: Response.self, httpMethod: .get, parameters: nil, onSuccess: { apiResponse in
     response = apiResponse
-}) { error in
-    print(error.localizedDescription)
-}
-
+}) { _ in }
 
 sessionDataTask?.cancel()
 ```
