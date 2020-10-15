@@ -1,3 +1,5 @@
+import Foundation
+
 final class NetworkUtil {
     enum HTTPMethod {
         case get
